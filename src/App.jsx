@@ -1,122 +1,115 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+/**
+ * App.jsx
+ *
+ * Root layout component — the two-panel shell.
+ *
+ * Tree:
+ *   <App>
+ *     <Header onDownload={handleDownload} />
+ *     <div.app-body>
+ *       <div.left-panel>
+ *         <Sidebar />           ← section tab navigation
+ *         <div.form-content>    ← Phase 2: active form rendered here
+ *       <div.right-panel>
+ *         <div.preview-scroll>
+ *           <div.resume-paper>  ← Phase 3: ResumePreview rendered here
+ *
+ * Phase notes:
+ *   Phase 2 — replace the left placeholder with a form-switcher
+ *   Phase 3 — replace the right placeholder with <ResumePreview />
+ *   Phase 4 — implement handleDownload using pdfExport.js
+ */
+
+import './App.css';
+import Header  from './components/layout/Header';
+import Sidebar from './components/layout/Sidebar';
+import { useResumeData } from './hooks/useResumeData';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { state } = useResumeData();
+
+  /* ── PDF download ────────────────────────────────────────────
+   * Phase 4 will replace this stub with:
+   *   import { exportToPdf } from './utils/pdfExport';
+   *   exportToPdf('resume-paper');
+   * ──────────────────────────────────────────────────────────── */
+  function handleDownload() {
+    console.info('[Phase 4] PDF export — not yet implemented.');
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="app">
 
-      <div className="ticks"></div>
+      {/* ── Top bar ─────────────────────────────────────────── */}
+      <Header onDownload={handleDownload} />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      {/* ── Two-panel body ──────────────────────────────────── */}
+      <div className="app-body">
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        {/* LEFT PANEL — editor */}
+        <div className="left-panel">
+
+          {/* Section tab navigation */}
+          <Sidebar />
+
+          {/* Form area ─── Phase 2 will render the active form here.
+              Replace this placeholder block entirely in Phase 2:
+
+              import FormSwitcher from './components/forms/FormSwitcher';
+              <div className="form-content">
+                <FormSwitcher activeSection={state.activeSection} />
+              </div>
+          */}
+          <div className="form-content">
+            <div className="phase-placeholder">
+              <span className="phase-placeholder-icon" aria-hidden="true">🚧</span>
+              <h2>Phase 2 — Forms</h2>
+              <p>
+                The{' '}
+                <strong>
+                  {/* Humanise the key for display */}
+                  {state.activeSection.charAt(0).toUpperCase() +
+                    state.activeSection.slice(1)}
+                </strong>{' '}
+                form will be built here in Phase 2.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        {/* RIGHT PANEL — resume preview */}
+        <div className="right-panel">
+          <div className="preview-scroll">
+
+            {/*
+             * id="resume-paper" — html2pdf.js targets this element in Phase 4.
+             * Do NOT rename this id.
+             */}
+            <div className="resume-paper" id="resume-paper">
+
+              {/* Phase 3 will replace this placeholder with <ResumePreview /> */}
+              <div className="phase-placeholder phase-placeholder--preview">
+                <span className="phase-placeholder-icon" aria-hidden="true">👁️</span>
+                <h2>Live Preview</h2>
+                <p>Your resume will appear here in Phase 3.</p>
+
+                {/* Show pre-filled name so the user can confirm defaultData loaded */}
+                {state.personalInfo.fullName && (
+                  <p className="preview-name-hint">
+                    Editing resume for:{' '}
+                    <strong>{state.personalInfo.fullName}</strong>
+                  </p>
+                )}
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
 }
 
-export default App
+export default App;

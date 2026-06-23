@@ -1,0 +1,134 @@
+/* ================================================================
+   layout.css — Two-Panel Application Shell
+   Defines the macro-level grid: header, left panel, right panel.
+   Does NOT contain component-level styles (those live in App.css).
+   ================================================================ */
+
+/* ── App shell — full-viewport flex column ── */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--clr-bg-base);
+  font-family: var(--font-ui);
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+.app-header {
+  height: var(--header-height);
+  min-height: var(--header-height);     /* prevent flex shrink */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-6);
+  background: rgba(12, 17, 40, 0.85);  /* semi-transparent surface */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--clr-border-subtle);
+  z-index: 100;
+  position: relative;
+  /* Subtle bottom glow line */
+  box-shadow: 0 1px 0 var(--clr-border), var(--shadow-sm);
+}
+
+/* ── Body — horizontal split below header ── */
+.app-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;   /* children scroll internally, not the body */
+}
+
+/* ── LEFT PANEL — editor (forms + sidebar) ─────────────────── */
+.left-panel {
+  width: var(--left-panel-width);
+  min-width: 380px;
+  display: flex;
+  flex-direction: column;
+  background: var(--clr-bg-surface);
+  border-right: 1px solid var(--clr-border-subtle);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* Sidebar nav area — sits at the top of the left panel */
+.sidebar-nav {
+  flex-shrink: 0;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--clr-border-subtle);
+  background: rgba(7, 9, 26, 0.60);
+  overflow-x: auto;    /* allow horizontal scroll if tabs overflow */
+  scrollbar-width: none;
+}
+.sidebar-nav::-webkit-scrollbar { display: none; }
+
+/* Form content area — scrollable, grows to fill remaining height */
+.form-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-6);
+  scrollbar-width: thin;
+  scrollbar-color: var(--clr-border) transparent;
+}
+.form-content::-webkit-scrollbar        { width: 4px; }
+.form-content::-webkit-scrollbar-track  { background: transparent; }
+.form-content::-webkit-scrollbar-thumb  {
+  background: var(--clr-border);
+  border-radius: var(--radius-full);
+}
+
+/* ── RIGHT PANEL — live resume preview ─────────────────────── */
+.right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--clr-bg-base);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Scrollable wrapper that centres the paper */
+.preview-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-8);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  scrollbar-width: thin;
+  scrollbar-color: var(--clr-border) transparent;
+}
+.preview-scroll::-webkit-scrollbar        { width: 4px; }
+.preview-scroll::-webkit-scrollbar-track  { background: transparent; }
+.preview-scroll::-webkit-scrollbar-thumb  {
+  background: var(--clr-border);
+  border-radius: var(--radius-full);
+}
+
+/* A4 paper card — the actual printable resume surface */
+.resume-paper {
+  width: 794px;          /* A4 width at 96 dpi */
+  min-height: 1123px;    /* A4 height at 96 dpi */
+  background: var(--clr-preview-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  position: relative;
+  color: var(--clr-preview-text);
+  font-family: var(--font-resume);
+}
+
+/* ── Responsive — stack panels on narrow screens ─────────── */
+@media (max-width: 900px) {
+  .app-body        { flex-direction: column; }
+  .left-panel      {
+    width: 100%;
+    min-width: unset;
+    max-height: 50vh;
+    border-right: none;
+    border-bottom: 1px solid var(--clr-border-subtle);
+  }
+  .right-panel     { flex: 1; }
+  .resume-paper    { width: 100%; min-height: unset; border-radius: 0; }
+  .preview-scroll  { padding: var(--space-4); }
+}
